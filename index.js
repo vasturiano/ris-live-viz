@@ -21,7 +21,7 @@ const Graph = ForceGraph3D()
   .d3VelocityDecay(0.5);
 
   // custom node
-  const sphereGeometry = new THREE.SphereGeometry(Graph.nodeRelSize(), 8, 8);
+  const sphereGeometry = new THREE.SphereGeometry(Graph.nodeRelSize(), 10, 10);
   const sphereMaterials = {
     origin: new THREE.MeshPhongMaterial({ color: 'crimson', depthWrite: false,  transparent: true, opacity: 0.8 }),
     collector: new THREE.MeshPhongMaterial({ color: 'steelblue', depthWrite: false,  transparent: true, opacity: 0.8 }),
