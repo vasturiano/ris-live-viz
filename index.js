@@ -7,14 +7,36 @@ const Graph = ForceGraph3D()
   (document.getElementById('viz'))
   .nodeLabel(node => `AS${node.id}`)
   .nodeColor(node => ({
-      origin: 'red',
-      collector: 'blue',
+      origin: 'crimson',
+      collector: 'steelblue',
       peer: null
     }[node.type]))
   .linkDirectionalParticles(2)
   .linkWidth(link => link.latest ? 4 : 0)
   .dagMode('lr')
-  .dagLevelDistance(70);
+  .dagLevelDistance(70)
+  .linkCurvature(-0.07);
+  /*
+  .nodeThreeObject(node => {
+    const color = {
+      origin: 'crimson',
+      collector: 'steelblue',
+      peer: '#ffffaa'
+    }[node.type];
+
+    // use a sphere as a drag handle
+    const obj = new THREE.Mesh(
+      new THREE.SphereGeometry(12),
+      new THREE.MeshBasicMaterial({ color, depthWrite: false,  transparent: true, opacity: 0.75 })
+    );
+    // add text sprite as child
+    const sprite = new SpriteText(`AS${node.id}`);
+    sprite.color = node.type === 'peer' ? '#111' : '#eee';
+    sprite.textHeight = 5;
+    obj.add(sprite);
+    return obj;
+  });
+  */
 
   // Add collision force
   Graph.d3Force('collide', d3.forceCollide(Graph.nodeRelSize()));
