@@ -53,9 +53,10 @@ ws.onmessage = message => {
 };
 
 // init controls
-const controls = { ASN: 13335 };
+const controls = { ASN: 13335, Update: true };
 const gui = new dat.GUI();
 gui.add(controls, 'ASN').onChange(startViz);
+// gui.add(controls, 'Update');
 
 // kick-start with default AS
 ws.onopen = () => startViz(controls.ASN);
@@ -75,6 +76,8 @@ function genData () {
 
   return { nodes, links };
 }
+
+const updGraph = _.throttle(() => Graph.graphData(genData()), 1500);
 
 function startViz(asn) {
   if (prevRisFilter) {
@@ -96,7 +99,7 @@ function startViz(asn) {
       12654: { id: 12654, upNeighbors: new Set(), type: 'collector' }
     };
 
-    Graph.graphData(genData());
+    updGraph();
   }, 100);
 }
 
@@ -121,7 +124,9 @@ function processRisMessage(risMsg) {
       prevNode = node;
     });
 
-    Graph.graphData(genData());
+    if (controls.Update) {
+      updGraph();
+    }
   }
 
   //
