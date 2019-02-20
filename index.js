@@ -5,6 +5,7 @@ let prevRisFilter;
 // init force graph
 const Graph = ForceGraph3D()
   (document.getElementById('viz'))
+  .nodeRelSize(5)
   .nodeLabel(node => `AS${node.id}`)
   .nodeColor(node => ({
       origin: 'crimson',
@@ -14,32 +15,32 @@ const Graph = ForceGraph3D()
   .linkDirectionalParticles(2)
   .linkWidth(link => link.latest ? 4 : 0)
   .dagMode('lr')
-  .dagLevelDistance(70)
+  .dagLevelDistance(75)
   .linkCurvature(-0.07);
-  /*
-  .nodeThreeObject(node => {
-    const color = {
-      origin: 'crimson',
-      collector: 'steelblue',
-      peer: '#ffffaa'
-    }[node.type];
 
-    // use a sphere as a drag handle
-    const obj = new THREE.Mesh(
-      new THREE.SphereGeometry(12),
-      new THREE.MeshBasicMaterial({ color, depthWrite: false,  transparent: true, opacity: 0.75 })
-    );
+  // custom node
+  const sphereGeometry = new THREE.SphereGeometry(Graph.nodeRelSize(), 8, 8);
+  const sphereMaterials = {
+    origin: new THREE.MeshPhongMaterial({ color: 'crimson', depthWrite: false,  transparent: true, opacity: 0.75 }),
+    collector: new THREE.MeshPhongMaterial({ color: 'steelblue', depthWrite: false,  transparent: true, opacity: 0.75 }),
+    peer: new THREE.MeshPhongMaterial({ color: '#ffffaa', depthWrite: false,  transparent: true, opacity: 0.75 })
+  };
+  Graph.nodeThreeObject(node => {
+    const obj = new THREE.Mesh(sphereGeometry, sphereMaterials[node.type]);
+
     // add text sprite as child
     const sprite = new SpriteText(`AS${node.id}`);
     sprite.color = node.type === 'peer' ? '#111' : '#eee';
-    sprite.textHeight = 5;
+    sprite.textHeight = 2;
     obj.add(sprite);
     return obj;
   });
-  */
 
   // Add collision force
   Graph.d3Force('collide', d3.forceCollide(Graph.nodeRelSize()));
+
+  // Spread nodes a little wider
+  Graph.d3Force('charge').strength(-70);
 
 // init websocket
 const ws = new WebSocket("wss://ris-live.ripe.net/v1/ws/?client=vasco-ris-live-viz");
