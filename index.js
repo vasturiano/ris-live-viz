@@ -16,6 +16,9 @@ const Graph = ForceGraph3D()
   .dagMode('lr')
   .dagLevelDistance(70);
 
+  // Add collision force
+  Graph.d3Force('collide', d3.forceCollide(Graph.nodeRelSize()));
+
 // init websocket
 const ws = new WebSocket("wss://ris-live.ripe.net/v1/ws/?client=vasco-ris-live-viz");
 ws.onmessage = message => {
