@@ -16,14 +16,16 @@ const Graph = ForceGraph3D()
   .linkWidth(link => link.latest ? 4 : 0)
   .dagMode('lr')
   .dagLevelDistance(75)
-  .linkCurvature(-0.07);
+  .linkCurvature(-0.07)
+  .d3AlphaDecay(0.04)
+  .d3VelocityDecay(0.5);
 
   // custom node
   const sphereGeometry = new THREE.SphereGeometry(Graph.nodeRelSize(), 8, 8);
   const sphereMaterials = {
-    origin: new THREE.MeshPhongMaterial({ color: 'crimson', depthWrite: false,  transparent: true, opacity: 0.75 }),
-    collector: new THREE.MeshPhongMaterial({ color: 'steelblue', depthWrite: false,  transparent: true, opacity: 0.75 }),
-    peer: new THREE.MeshPhongMaterial({ color: '#ffffaa', depthWrite: false,  transparent: true, opacity: 0.75 })
+    origin: new THREE.MeshPhongMaterial({ color: 'crimson', depthWrite: false,  transparent: true, opacity: 0.8 }),
+    collector: new THREE.MeshPhongMaterial({ color: 'steelblue', depthWrite: false,  transparent: true, opacity: 0.8 }),
+    peer: new THREE.MeshPhongMaterial({ color: '#ffffaa', depthWrite: false,  transparent: true, opacity: 0.8 })
   };
   Graph.nodeThreeObject(node => {
     const obj = new THREE.Mesh(sphereGeometry, sphereMaterials[node.type]);
